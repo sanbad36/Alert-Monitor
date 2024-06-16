@@ -1,0 +1,83 @@
+[
+    {
+        "client": "X",
+        "eventType": "PAYMENT_SERVICE_EXCEPTION",
+        "alertConfig": {
+            "type": "TUMBLING_WINDOW",
+            "count": 2,
+            "windowSizeInSecs": 10
+        },
+        "dispatchStrategyList": [
+            {
+                "type": "CONSOLE",
+                "message": "issue in payment"
+            },
+            {
+                "type": "EMAIL",
+                "subject": "payment exception threshold breached"
+            }
+        ]
+    },
+    {
+        "client": "Y",
+        "eventType": "PAYMENT_SERVICE_EXCEPTION",
+        "alertConfig": {
+            "type": "TUMBLING_WINDOW",
+            "count": 2,
+            "windowSizeInSecs": 10
+        },
+        "dispatchStrategyList": [
+            {
+                "type": "CONSOLE",
+                "message": "issue in payment"
+            },
+            {
+                "type": "EMAIL",
+                "subject": "payment exception threshold breached"
+            }
+        ]
+    },
+    {
+        "client": "X",
+        "eventType": "USER_SERVICE_EXCEPTION",
+        "alertConfig": {
+            "type": "SLIDING_WINDOW",
+            "count": 2,
+            "windowSizeInSecs": 5
+        },
+        "dispatchStrategyList": [
+            {
+                "type": "CONSOLE",
+                "message": "issue in user service"
+            }
+        ]
+    },
+    {
+        "client": "X",
+        "eventType": "UNAUTHORIZED_EXCEPTION",
+        "alertConfig": {
+            "type": "SIMPLE_COUNT",
+            "count": 1
+        },
+        "dispatchStrategyList": [
+            {
+                "type": "CONSOLE",
+                "message": "unauthorized access"
+            }
+        ]
+    },
+    {
+        "client": "Y",
+        "eventType": "UNAUTHORIZED_EXCEPTION",
+        "alertConfig": {
+            "type": "SIMPLE_COUNT",
+            "count": 1
+        },
+        "dispatchStrategyList": [
+            {
+                "type": "CONSOLE",
+                "message": "unauthorized access"
+            }
+        ]
+    }
+]
