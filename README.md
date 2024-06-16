@@ -326,7 +326,7 @@ Imagine a scenario where a large-scale application is generating various types o
 
 System Diagram: 
 
-![Untitled](future_scope_system_diagram.png)
+![future_scope_system_diagram](future_scope_system_diagram.png)
 
 ### Security:
 
