@@ -14,14 +14,16 @@ public class SimpleEventProcessor extends EventProcessor {
 
     @Override
     public Boolean isThresholdReached(Event event) {
+//        System.out.println("** current count :" + eventsRepositoryService.countAllOccurrences(event));
+//        System.out.println("*** config count" + config.getCount());
         Boolean thresholdExceeded = eventsRepositoryService.countAllOccurrences(event) > config.getCount();
         if (thresholdExceeded) {
-            reset();
+            reset(event);
         }
         return thresholdExceeded;
     }
 
-    private void reset() {
+    private void reset(Event event) {
         // TODO: have some reset logic else every event, after the threshold is reached, will generate alert.
         //  This will ultimately result in noise
     }

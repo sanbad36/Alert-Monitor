@@ -2,9 +2,11 @@ package com.sanketbadjate.alert_monitor.services.repositoryServices;
 
 import com.sanketbadjate.alert_monitor.models.Event;
 import com.sanketbadjate.alert_monitor.repositories.EventRepository;
+import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 
+@Service
 public class EventsRepositoryService {
     private EventRepository eventRepository;
 
@@ -31,4 +33,5 @@ public class EventsRepositoryService {
     public Integer countAllOccurrencesBetween(Event event, LocalDateTime start, LocalDateTime end) {
         return eventRepository.findBetween(event, start, end).size();
     }
+
 }

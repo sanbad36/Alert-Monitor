@@ -1,64 +1,36 @@
 package com.sanketbadjate.alert_monitor.services;
 
-
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.sanketbadjate.alert_monitor.constants.ApplicationConstants;
 import com.sanketbadjate.alert_monitor.constants.LoggerConstants;
 import com.sanketbadjate.alert_monitor.enums.AlertStrategy;
 import com.sanketbadjate.alert_monitor.models.Event;
 import com.sanketbadjate.alert_monitor.services.repositoryServices.EventsRepositoryService;
+import com.sanketbadjate.alert_monitor.utils.config.ConfigUpdater;
 import com.sanketbadjate.alert_monitor.utils.config.ServiceEventAlertConfig;
 import com.sanketbadjate.alert_monitor.utils.eventProcessor.EventProcessor;
 import com.sanketbadjate.alert_monitor.utils.eventProcessor.EventProcessorFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+@Service
 public class MonitoringService implements LoggerService {
-    private static volatile MonitoringService INSTANCE;
     private final AlertingService alertingService;
     private final EventsRepositoryService eventsRepositoryService;
+    private final Map<Event, ServiceEventAlertConfig> eventConfigMap;
 
-    File file;
-    ObjectMapper mapper;
-    List<ServiceEventAlertConfig> serviceEventAlertConfig ;
-    Map<Event, ServiceEventAlertConfig> eventConfigMap = new HashMap<>();
+    @Autowired
+    private ConfigUpdater configUpdater;
 
-    public static MonitoringService getInstance(EventsRepositoryService eventsRepositoryService, AlertingService alertingService) throws IOException {
-        if (INSTANCE == null) {
-            synchronized (MonitoringService.class) {
-                if (INSTANCE == null)
-                    INSTANCE = new MonitoringService(eventsRepositoryService, alertingService);
-            }
-        }
-        return INSTANCE;
-    }
-
-    private MonitoringService(EventsRepositoryService eventsRepositoryService, AlertingService alertingService) throws IOException {
+    public MonitoringService(EventsRepositoryService eventsRepositoryService, AlertingService alertingService, Map<Event, ServiceEventAlertConfig> eventConfigMap) {
         this.eventsRepositoryService = eventsRepositoryService;
         this.alertingService = alertingService;
-
-        // read configuration from json configuration
-//        file = new File(System.getProperty(ApplicationConstants.USER_DIRECTORY) + ApplicationConstants.SERVICE_EVENT_ALERT_CONFIG_PATH);
-        file = new File(ApplicationConstants.USER_DIRECTORY + ApplicationConstants.SERVICE_EVENT_ALERT_CONFIG_PATH);
-
-        mapper = new ObjectMapper();
-        serviceEventAlertConfig = mapper.readValue(file, new TypeReference<>(){});
-
-        // store config corresponding to specific event from a specific client
-        for (ServiceEventAlertConfig config : serviceEventAlertConfig) {
-            eventConfigMap.put(Event.builder().client(config.getClient()).eventType(config.getEventType()).build(), config);
-            if (AlertStrategy.TUMBLING_WINDOW.equals(config.getAlertConfig().getType())) {
-                // TODO: implement this
-                // register CRON which tumbling window for config.getAlertConfig().getClient() + config.getAlertConfig().getType()
-                // this logs start and end logs to make it look exactly like sample output
-            }
-        }
+        this.eventConfigMap = eventConfigMap;
+        configUpdater = new ConfigUpdater(new RestTemplate() , eventConfigMap);
+        // Initialize or update configuration from GitHub during service initialization
+        updateConfigFromGitHub();
     }
 
     public Boolean shouldTriggerAlert(EventProcessor eventProcessor, Event event, ServiceEventAlertConfig config) {
@@ -80,6 +52,16 @@ public class MonitoringService implements LoggerService {
 
         if (shouldTriggerAlert(eventProcessor, event, config)) {
             alertingService.triggerAlert(config);
+        }
+    }
+
+    public void updateConfigFromGitHub() {
+        try {
+            // Use ConfigUpdater to update configuration from GitHub
+            configUpdater.updateConfigFromGithub();
+        } catch (Exception e) {
+            // Handle exceptions appropriately (logging, throwing, etc.)
+            System.out.println("Failed to update configuration from GitHub: " + e.getMessage());
         }
     }
 }

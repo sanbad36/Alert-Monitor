@@ -3,12 +3,14 @@ package com.sanketbadjate.alert_monitor.repositories;
 
 import com.sanketbadjate.alert_monitor.models.Event;
 import lombok.Getter;
+import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
 @Getter
+@Repository
 public class EventRepository {
     // similar to time-series database storage
     // this can be further optimized to have Map<Client, Map<EventType, Event>> instead of List<Event> in value of
@@ -55,5 +57,9 @@ public class EventRepository {
                 .flatMap(List::stream)
                 .filter(currEvent -> currEvent.equals(event))
                 .collect(Collectors.toList());
+    }
+
+    public void remove(Event event) {
+        timeToEventMap.remove(event);
     }
 }

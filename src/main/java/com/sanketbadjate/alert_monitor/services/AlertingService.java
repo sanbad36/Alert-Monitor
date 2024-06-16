@@ -2,7 +2,9 @@ package com.sanketbadjate.alert_monitor.services;
 
 
 import com.sanketbadjate.alert_monitor.utils.config.ServiceEventAlertConfig;
+import org.springframework.stereotype.Service;
 
+@Service
 public class AlertingService implements LoggerService {
     private static volatile AlertingService INSTANCE;
 
