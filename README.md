@@ -105,40 +105,67 @@ user triggered (for simplicity), and raise an alert according to alert configura
 ### Sample Execution
 
 ● Alert will be dispatched if the config thresholds are met
+
 ● You can design your own config.
+
 ● You need to keep a placeholder for defining different dispatch mechanisms. (You may
 provide implementation for console dispatch)
+
 ● Simulate the dispatch of alerts by generating events in a main class / test case
 
 ### Sample Output
 
 [INFO] MonitoringService: Client X PAYMENT_EXCEPTION TUMBLING_WINDOW
+
 starts
+
 [INFO] MonitoringService: Client X PAYMENT_EXCEPTION TUMBLING_WINDOW
+
 ends
-[INFO] MonitoringService: Client X PAYMENT_EXCEPTION TUMBLING_WINDOW
+
+[INFO] MonitoringService: Client X PAYMENT_EXCEPTION TUMBLING_WINDOW 
+
 starts
+
 [INFO] MonitoringService: Client X PAYMENT_EXCEPTION threshold
+
 breached
+
 [INFO] AlertingService: Dispatching to Console
+
 [WARN] Alert: `issue in payment`
+
 [INFO] AlertingService: Dispatching an Email
+
 [INFO] MonitoringService: Client X USERSERVICE_EXCEPTION threshold
+
 breached
+
 [INFO] AlertingService: Dispatching to Console
+
 [WARN] Alert: `issue in user service`
+
 [INFO] MonitoringService: Client X PAYMENT_EXCEPTION TUMBLING_WINDOW
+
 ends
+
 
 ### Evaluation
 
 ● Code modularity, readability and testability
+
 ● Refactored code
+
 ● Abstraction
+
 ● Language proficiency.
+
 ● Functional coverage
+
 ● Separation of concerns
+
 ● Application of OO design principles
+
 ● Data structures and optimal time complexit
 
 ---
